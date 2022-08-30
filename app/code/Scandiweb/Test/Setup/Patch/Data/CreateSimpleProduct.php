@@ -13,6 +13,7 @@ use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\Product\Type;
 use Magento\Catalog\Model\Product\Visibility;
+use Magento\Catalog\Api\CategoryLinkManagementInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
@@ -30,6 +31,8 @@ class CreateSimpleProduct implements DataPatchInterface
     protected SourceItemInterfaceFactory $sourceItemFactory;
 
     protected SourceItemsSaveInterface $sourceItemsSave;
+
+    protected  CategoryLinkManagementInterface $categoryLink;
 
     protected array $sourceItems;
 
@@ -49,6 +52,7 @@ class CreateSimpleProduct implements DataPatchInterface
         $this->eavSetup = $eavSetup;
         $this->sourceItemFactory = $sourceItemFactory;
         $this->sourceItemsSave = $sourceItemsSave;
+        $this->categoryLink = $categoryLink;
         $this->sourceItems = [];
     }
 
@@ -92,6 +96,14 @@ class CreateSimpleProduct implements DataPatchInterface
         $this->sourceItems[] = $sourceItem;
 
         $this->sourceItemsSave->execute($this->sourceItems);
+
+        // Add product to GPUs category
+        $categoryTitles = ['GPUs'];
+        $categoryIds = $this->categoryCollectionFactory->create()
+            ->addAttributeToFilter('name', ['in' => $categoryTitles])
+            ->getAllIds();
+
+        $this->categoryLink->assignProductToCategories($product->getSku(), $categoryIds);
     }
 
     public function getAliases(): array {
