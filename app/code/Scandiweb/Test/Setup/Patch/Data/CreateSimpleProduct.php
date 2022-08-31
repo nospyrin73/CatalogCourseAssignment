@@ -17,6 +17,7 @@ use Magento\Catalog\Api\CategoryLinkManagementInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterface;
 use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
 use Magento\InventoryApi\Api\SourceItemsSaveInterface;
+use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
 
 class CreateSimpleProduct implements DataPatchInterface
 {
@@ -34,6 +35,8 @@ class CreateSimpleProduct implements DataPatchInterface
 
     protected  CategoryLinkManagementInterface $categoryLink;
 
+    protected CategoryCollectionFactory $categoryCollectionFactory;
+
     protected array $sourceItems;
 
     public function __construct(
@@ -43,22 +46,24 @@ class CreateSimpleProduct implements DataPatchInterface
         EavSetup $eavSetup,
         SourceItemInterfaceFactory $sourceItemFactory,
         SourceItemsSaveInterface $sourceItemsSave,
-        CategoryLinkManagementInterface $categoryLink
+        CategoryLinkManagementInterface $categoryLink,
+        CategoryCollectionFactory $categoryCollectionFactory
     )
     {
         $this->state = $state;
-        $this->productInterfaceFactory = $productFactory;
+        $this->productFactory = $productFactory;
         $this->productRepository = $productRepository;
         $this->eavSetup = $eavSetup;
         $this->sourceItemFactory = $sourceItemFactory;
         $this->sourceItemsSave = $sourceItemsSave;
         $this->categoryLink = $categoryLink;
+        $this->categoryCollectionFactory = $categoryCollectionFactory;
         $this->sourceItems = [];
     }
 
     public function apply()
     {
-        $this->state->emulateAreaCode('execute', [$this, 'execute']);
+        $this->state->emulateAreaCode('adminhtml', [$this, 'execute']);
     }
 
     public function execute()
@@ -81,7 +86,8 @@ class CreateSimpleProduct implements DataPatchInterface
             ->setPrice(699.00)
             ->setVisibility(Visibility::VISIBILITY_BOTH)
             ->setStatus(Status::STATUS_ENABLED)
-            ->setAttributeSetId($attributeSetId);
+            ->setAttributeSetId($attributeSetId)
+            ->setStockData(['use_config_manage_stock' => 1, 'is_qty_decimal' => 0, 'is_in_stock' => 1]);
 
         // Save the product
         $product = $this->productRepository->save($product);

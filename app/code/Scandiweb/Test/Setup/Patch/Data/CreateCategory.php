@@ -7,6 +7,7 @@ namespace Scandiweb\Test\Setup\Patch\Data;
 use Magento\Catalog\Setup\CategorySetup;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
+use Magento\Store\Model\StoreManagerInterface;
 
 class CreateCategory implements DataPatchInterface
 {
@@ -14,17 +15,21 @@ class CreateCategory implements DataPatchInterface
 
     protected CategoryCollectionFactory $categoryCollectionFactory;
 
+    protected StoreManagerInterface $storeManager;
+
     public function __construct(
         CategorySetup $categorySetup,
-        CategoryCollectionFactory $categoryCollectionFactory
+        CategoryCollectionFactory $categoryCollectionFactory,
+        StoreManagerInterface     $storeManager
     ) {
         $this->categorySetup = $categorySetup;
         $this->categoryCollectionFactory = $categoryCollectionFactory;
+        $this->storeManager = $storeManager;
     }
 
     public function apply()
     {
-        $parentId = $this->storeManagerInterface->getStore()->getRootCategoryId();
+        $parentId = $this->storeManager->getStore()->getRootCategoryId();
 
         $collection = $this->categoryCollectionFactory->create();
         $collection->addAttributeToFilter('url_key', ['eq' => 'gpus']);
