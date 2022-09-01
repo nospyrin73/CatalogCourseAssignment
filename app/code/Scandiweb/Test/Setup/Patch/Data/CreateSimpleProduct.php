@@ -100,7 +100,7 @@ class CreateSimpleProduct implements DataPatchInterface
     /**
      * @return void
      */
-    public function apply()
+    public function apply(): void
     {
         $this->state->emulateAreaCode('adminhtml', [$this, 'execute']);
     }
@@ -108,7 +108,7 @@ class CreateSimpleProduct implements DataPatchInterface
     /**
      * @return void
      */
-    public function execute()
+    public function execute(): void
     {
         // Create product
         $product = $this->productFactory->create();
@@ -157,14 +157,16 @@ class CreateSimpleProduct implements DataPatchInterface
     /**
      * @return array
      */
-    public function getAliases(): array {
+    public function getAliases(): array
+    {
         return [];
     }
 
     /**
      * @return array
      */
-    public static function getDependencies(): array {
+    public static function getDependencies(): array
+    {
         return [];
     }
 }

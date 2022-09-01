@@ -44,7 +44,7 @@ class CreateCategory implements DataPatchInterface
     /**
      * @return void
      */
-    public function apply()
+    public function apply(): void
     {
         $parentId = $this->storeManager->getStore()->getRootCategoryId();
 
@@ -70,14 +70,16 @@ class CreateCategory implements DataPatchInterface
     /**
      * @return array
      */
-    public function getAliases(): array {
+    public function getAliases(): array
+    {
         return [];
     }
 
     /**
      * @return array
      */
-    public static function getDependencies(): array {
+    public static function getDependencies(): array
+    {
         return [];
     }
 }
