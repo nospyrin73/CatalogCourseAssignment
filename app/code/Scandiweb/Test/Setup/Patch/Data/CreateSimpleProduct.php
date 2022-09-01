@@ -21,24 +21,61 @@ use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCo
 
 class CreateSimpleProduct implements DataPatchInterface
 {
+    /**
+     * @var State
+     */
     protected State $state;
 
+    /**
+     * @var ProductInterfaceFactory
+     */
     protected ProductInterfaceFactory $productFactory;
 
+    /**
+     * @var ProductRepositoryInterface
+     */
     protected ProductRepositoryInterface $productRepository;
 
+    /**
+     * @var EavSetup
+     */
     protected EavSetup $eavSetup;
 
+    /**
+     * @var SourceItemInterfaceFactory
+     */
     protected SourceItemInterfaceFactory $sourceItemFactory;
 
+    /**
+     * @var SourceItemsSaveInterface
+     */
     protected SourceItemsSaveInterface $sourceItemsSave;
 
+    /**
+     * @var CategoryLinkManagementInterface
+     */
     protected  CategoryLinkManagementInterface $categoryLink;
 
+    /**
+     * @var CategoryCollectionFactory
+     */
     protected CategoryCollectionFactory $categoryCollectionFactory;
 
-    protected array $sourceItems;
+    /**
+     * @var array
+     */
+    protected array $sourceItems = [];
 
+    /**
+     * @param State $state
+     * @param ProductInterfaceFactory $productFactory
+     * @param ProductRepositoryInterface $productRepository
+     * @param EavSetup $eavSetup
+     * @param SourceItemInterfaceFactory $sourceItemFactory
+     * @param SourceItemsSaveInterface $sourceItemsSave
+     * @param CategoryLinkManagementInterface $categoryLink
+     * @param CategoryCollectionFactory $categoryCollectionFactory
+     */
     public function __construct(
         State $state,
         ProductInterfaceFactory $productFactory,
@@ -48,8 +85,7 @@ class CreateSimpleProduct implements DataPatchInterface
         SourceItemsSaveInterface $sourceItemsSave,
         CategoryLinkManagementInterface $categoryLink,
         CategoryCollectionFactory $categoryCollectionFactory
-    )
-    {
+    ) {
         $this->state = $state;
         $this->productFactory = $productFactory;
         $this->productRepository = $productRepository;
@@ -61,11 +97,17 @@ class CreateSimpleProduct implements DataPatchInterface
         $this->sourceItems = [];
     }
 
+    /**
+     * @return void
+     */
     public function apply()
     {
         $this->state->emulateAreaCode('adminhtml', [$this, 'execute']);
     }
 
+    /**
+     * @return void
+     */
     public function execute()
     {
         // Create product
@@ -112,10 +154,16 @@ class CreateSimpleProduct implements DataPatchInterface
         $this->categoryLink->assignProductToCategories($product->getSku(), $categoryIds);
     }
 
+    /**
+     * @return array
+     */
     public function getAliases(): array {
         return [];
     }
 
+    /**
+     * @return array
+     */
     public static function getDependencies(): array {
         return [];
     }

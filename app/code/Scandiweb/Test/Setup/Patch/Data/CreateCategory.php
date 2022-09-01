@@ -11,12 +11,26 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class CreateCategory implements DataPatchInterface
 {
+    /**
+     * @var CategorySetup
+     */
     protected CategorySetup $categorySetup;
 
+    /**
+     * @var CategoryCollectionFactory
+     */
     protected CategoryCollectionFactory $categoryCollectionFactory;
 
+    /**
+     * @var StoreManagerInterface
+     */
     protected StoreManagerInterface $storeManager;
 
+    /**
+     * @param CategorySetup $categorySetup
+     * @param CategoryCollectionFactory $categoryCollectionFactory
+     * @param StoreManagerInterface $storeManager
+     */
     public function __construct(
         CategorySetup $categorySetup,
         CategoryCollectionFactory $categoryCollectionFactory,
@@ -27,6 +41,9 @@ class CreateCategory implements DataPatchInterface
         $this->storeManager = $storeManager;
     }
 
+    /**
+     * @return void
+     */
     public function apply()
     {
         $parentId = $this->storeManager->getStore()->getRootCategoryId();
@@ -50,10 +67,16 @@ class CreateCategory implements DataPatchInterface
         }
     }
 
+    /**
+     * @return array
+     */
     public function getAliases(): array {
         return [];
     }
 
+    /**
+     * @return array
+     */
     public static function getDependencies(): array {
         return [];
     }
